@@ -17,6 +17,8 @@ namespace LearnGrpc.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+        
+     
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,10 +30,12 @@ namespace LearnGrpc.Server
             }
 
             app.UseRouting();
-
+            app.UseHttpsRedirection();
+           
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<GreeterService>().EnableGrpcWeb();
 
                 endpoints.MapGet("/", async context =>
                 {
