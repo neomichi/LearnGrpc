@@ -23,5 +23,22 @@ namespace LearnGrpc.Server
                 Message = "Hello " + request.Name
             });
         }
+
+        public override async Task SayHellos(HelloRequest request, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
+        {
+            Console.WriteLine(request.Name);
+
+
+            while (!context.CancellationToken.IsCancellationRequested)
+            {
+                await responseStream.WriteAsync(new HelloReply
+                {
+                    /* Message =string.Format("server {0:dddd dd MMMM }", DateTime.Now)*/
+                    Message=$"server {DateTime.Now:dddd dd MMMM} client {request.Name}"
+                });
+                await Task.Delay(TimeSpan.FromSeconds(5));
+
+            }
+        }
     }
 }
